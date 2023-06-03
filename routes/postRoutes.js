@@ -3,10 +3,11 @@ const {
     createPost,
     getAllPosts,
 } = require("../controllers/postController");
+const {verifyToken} = require("../jwtAuth");
 const postRouter = express.Router();
 
-postRouter.get("/", getAllPosts);
+postRouter.get("/", verifyToken, getAllPosts);
 
-postRouter.post("/:userId", createPost);
+postRouter.post("/:userId", verifyToken, createPost);
 
 module.exports = postRouter;
