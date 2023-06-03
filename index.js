@@ -17,6 +17,10 @@ const postRouter = require('./routes/postRoutes');
 app.use("/api/auth", userRouter);
 app.use("/api/articles", postRouter);
 
+app.get('/', (req, res) => {
+  res.send('Welcome to blogApp 🙌');
+});
+
 app.listen(PORT, () => {
   console.log(`server listening on ${PORT}`);
 })
