@@ -61,10 +61,14 @@ const login = async (req, res) => {
         }
 
         // Generate a JWT access token
-        const accessToken = jwt.sign({ userId: user._id }, 'secretKey', { expiresIn: '1h' });
+        const accessToken = jwt.sign({ userId: user._id },
+            process.env.ACCESS_TOKEN_KEY,
+            { expiresIn: '1h' });
 
         // Generate a JWT refresh token
-        const refreshToken = jwt.sign({ userId: user._id }, 'refreshSecret', { expiresIn: '7d' });
+        const refreshToken = jwt.sign({ userId: user._id },
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: '7d' });
 
         // Set response headers
         res.setHeader('Content-Type', 'application/json');
@@ -128,4 +132,29 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-module.exports = { signup, login, updateUser, getAllUsers };
+const refreshTokens = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+
+        // Verify the refresh token
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: 'Invalid refresh token' });
+            }
+
+            // Generate a new access token
+            const accessToken = jwt.sign({ userId: decoded.userId },
+                process.env.ACCESS_TOKEN_KEY, {
+                    expiresIn: '1h' });
+
+            res.json({
+                accessToken,
+            });
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+module.exports = { signup, login, updateUser, getAllUsers, refreshTokens };

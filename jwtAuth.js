@@ -8,7 +8,7 @@ const verifyToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, 'secretKey');
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_KEY);
 
         // Attach the decoded payload to the request object
         req.userId = decoded.userId;
