@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connected to the Database!'))
