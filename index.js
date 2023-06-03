@@ -6,6 +6,10 @@ const mongoose = require('mongoose');
 mongoose.set("strictQuery", false);
 require('dotenv').config();
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 3001;
 
 mongoose.connect(process.env.MONGO_URL)
