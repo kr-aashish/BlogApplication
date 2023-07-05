@@ -10,6 +10,7 @@ This is a simple blog application that allows users to create, read, update, and
 - **`POST /api/auth/signup`** - Create a new user account.
 - **`POST /api/auth/login`** - Log in to the application and obtain access and refresh tokens.
 - **`PUT /api/auth/:userId`** - Update the user details. Requires a valid access token.
+- **`POST /api/auth/signup`** - Retrieve access token from refresh token, upon it's expiry.
 
 ### Article **Routes**
 
