@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  ExpressFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./routes
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Events:
+        AnyHttpEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY

@@ -10,10 +10,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 8080;
-
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log('Connected to the Database!'))
+// AWS Serverless Express
+const awsServerlessExpress = require('aws-serverless-express');
 
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
@@ -25,6 +23,20 @@ app.get('/', (req, res) => {
   res.send('Welcome to blogApp 🙌');
 });
 
-app.listen(PORT, () => {
-  console.log(`server listening on ${PORT}`);
-})
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => console.log('Connected to the Database!'))
+    .catch(err => console.error('Could not connect to MongoDB.', err));
+
+// Remove the traditional server listen method
+// app.listen(PORT, () => {
+//   console.log(`server listening on ${PORT}`);
+// });
+
+// Create a server for aws-serverless-express to use
+const server = awsServerlessExpress.createServer(app);
+
+// Export the handler function for AWS Lambda
+exports.handler = (event, context) => {
+  awsServerlessExpress.proxy(server, event, context);
+};
